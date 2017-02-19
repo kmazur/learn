@@ -11,6 +11,9 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+.idea/
+.gradle/
+build/
 
 # Scala-IDE specific
 .scala_dependencies
