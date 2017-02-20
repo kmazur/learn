@@ -105,6 +105,5 @@ object Arrays {
 
     zipped.toMap
 
-    val value = new com.scala.Classes.Counter()
   }
 }
