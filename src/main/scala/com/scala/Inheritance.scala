@@ -22,6 +22,35 @@ object Inheritance {
 
   class Student(override val name: String = "Tom") extends Person
 
+
+  class Equality(val name: String = "Eq", val id: Int = 0) {
+    // "eq" for reference equality
+    // AnyRef.equals calls eq by default
+    // == is equals in Scala
+
+    // Note the Any type of other
+    override def equals(other: Any): Boolean = other match {
+      case that: Equality => name == that.name && id == that.id
+      case _ => false
+    }
+
+    // ## is safe for nulls (returns 0)
+    override def hashCode(): Int = (name, id).##
+  }
+
+
+  // Value type -> not allocated - just a fast wrapper
+  // only one "val" field, and extends AnyVal
+  class MilitaryTime private(val time: Int) extends AnyVal {
+    def minutes = time % 100
+    def hours = time / 100
+    override def toString: String = f"${time}04d"
+  }
+  object MilitaryTime {
+    def apply(time: Int): MilitaryTime =
+      if(time < 0) { throw new IllegalArgumentException() } else { new MilitaryTime(time) }
+  }
+
   def main(args: Array[String]): Unit = {
     val employee = new Employee()
     println(employee.name)
