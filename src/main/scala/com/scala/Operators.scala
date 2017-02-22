@@ -6,9 +6,9 @@ object Operators {
 
     // unicode chars are supported
     val √ = scala.math.sqrt _
-    val sqrtOf8 = √ (4) + 1
+    val sqrtVal = √ (4) + 1
 
-    println(sqrtOf8) // 3.0
+    println(sqrtVal) // 3.0
 
     // -> can be → from Predef.ArrowAssoc
     assert(('a' -> 1) == ('a' → 1))
@@ -16,7 +16,7 @@ object Operators {
     // reserved: @ # : = _ => <- <: <% >: ⇒ ←
 
     // `...` almost anything inside
-    // yield is reserved - can do:
+    // yield is reserved - can't do:
     // Thread.yield()
     // instead:
     Thread.`yield`()

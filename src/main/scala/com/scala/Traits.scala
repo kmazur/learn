@@ -125,6 +125,6 @@ object Traits {
     early.log("test") // (5, Tom5): test
 
     val person2 = new Person() with EnforcerStruct
-    person2.log("enforced")
+    person2.log("enforced") // Bob: enforced
   }
 }
