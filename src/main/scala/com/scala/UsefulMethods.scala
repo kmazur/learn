@@ -14,6 +14,23 @@ object UsefulMethods {
     println(elementAt5)
     println(elementAt0)
 
+
+
+    val (q, r) = BigInt(10) /% 3 // (3, 1)
+
+
+
+    // Option
+    val dontKnowIfItsNull = null
+    val noneVal = Option(dontKnowIfItsNull) // None
+    val someVal = Option(1)                 // Some(1)
+
+    val partial1: PartialFunction[Int, Int] = { case 1 => 1 case 2 => 4}
+    val fullFunction1: (Int) => Int = { case 1 => 1 case 2 => 4 case _ => 0}
+    partial1.isDefinedAt(1) // true
+    partial1.apply(1)
+    val partialLifted: (Int) => Option[Int] = partial1.lift
+
   }
 
 }
