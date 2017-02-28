@@ -1,5 +1,7 @@
 package com.scala
 
+import scala.util.Try
+
 object UsefulMethods {
 
   def main(args: Array[String]): Unit = {
@@ -30,6 +32,12 @@ object UsefulMethods {
     partial1.isDefinedAt(1) // true
     partial1.apply(1)
     val partialLifted: (Int) => Option[Int] = partial1.lift
+
+
+
+
+    val tryInt1 = Try("abc".toInt) // Failure(NumberFormatException)
+    val tryInt2 = Try("123".toInt) // Success(123)
 
   }
 
