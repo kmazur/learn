@@ -39,6 +39,14 @@ object UsefulMethods {
     val tryInt1 = Try("abc".toInt) // Failure(NumberFormatException)
     val tryInt2 = Try("123".toInt) // Success(123)
 
+
+    // variable binding with @
+    // a@Type assign to a the whole type
+    for(x@Some(y) <- List(None, Some(1))) println(x, y) // prints (Some(1), 1)
+    val elem@Some(x): Some[Int] = Some(1)
+    println(s"$elem, $x")
+    val Array(h, i, rest @ _*) = Array(1, 2, 3, 4, 5)
+
   }
 
 }
