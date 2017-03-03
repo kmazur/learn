@@ -18,7 +18,7 @@ object Problem4 {
       r
     }
 
-    def isPalindrome(n: Int) = n == reverse(n)
+    @inline def isPalindrome(n: Int) = n == reverse(n)
 
     val palindromes = for {
       i <- 999 to 100 by -1
