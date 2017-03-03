@@ -9,15 +9,16 @@ object Problem4 {
 
   def main(args: Array[String]): Unit = {
 
-    def toDigits(n: Int): List[Int] = n match {
-      case x if x == 0 => Nil
-      case x => (n%10) :: toDigits(n/10)
+    def reverse(num: Int): Int = {
+      var (r, n) = (0, num)
+      while(n > 0) {
+        r = r * 10 + n % 10
+        n /= 10
+      }
+      r
     }
 
-    def isPalindrome(num: Int): Boolean = {
-      val digits = toDigits(num)
-      digits.zip(digits.reverse).take(digits.size/2).map(t => t._1 - t._2).count(_ != 0) == 0
-    }
+    def isPalindrome(n: Int) = n == reverse(n)
 
     val palindromes = for {
       i <- 999 to 100 by -1
