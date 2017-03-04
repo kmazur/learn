@@ -1,5 +1,4 @@
-package com.scala
-
+package com.scala.scalafortheimpatient
 
 object Tuples {
   def main(args: Array[String]): Unit = {

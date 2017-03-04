@@ -1,6 +1,6 @@
-package com.scala
+package com.scala.scalafortheimpatient
 
-import com.scala.Objects.Color.Color
+import Objects.Color.Color
 
 // this is basically lazy evaluated singleton
 object Objects {

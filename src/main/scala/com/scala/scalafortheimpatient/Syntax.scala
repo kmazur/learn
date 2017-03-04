@@ -1,4 +1,4 @@
-package com.scala
+package com.scala.scalafortheimpatient
 
 import java.io.IOException
 
