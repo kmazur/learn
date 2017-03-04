@@ -11,9 +11,14 @@ object Exercise3_15 {
   }
 
   def concat[A](as: List[List[A]]): List[A] = {
-    as.foldLeft(Nil:List[A])((lacc:List[A], list:List[A]) => {
+    as.foldRight(Nil: List[A])((list: List[A], racc: List[A]) => {
+      val reversed = list.foldLeft(Nil: List[A])((acc, elem) => elem :: acc)
+      racc.foldRight(reversed)((elem: A, all: List[A]) => elem :: all)
+    }).reverse
+
+    /*as.foldLeft(Nil:List[A])((lacc:List[A], list:List[A]) => {
       lacc.foldRight(list)((elem, racc) => elem :: racc)
-    })
+    })*/
   }
 
 }
