@@ -1,5 +1,7 @@
 package com.scala.functionalprogramminginscala
 
+import scala.annotation.tailrec
+
 /**
   * Implement isSorted, which checks whether an Array[A] is sorted according to a given comparison function:
   *
@@ -19,6 +21,7 @@ object Exercise2_2 {
     if (as.length <= 1) {
       true
     } else {
+      @tailrec
       def check(n: Int): Boolean = {
         if(n >= as.length)                 true
         else if(ordered(as(n-1), as(n)))   check(n+1)
