@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
   * Write a function maximum that returns the maximum element in a Tree[Int].

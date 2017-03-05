@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
   * Write a function that returns the reverse of a list (given List(1,2,3) it returns List(3,2,1)).

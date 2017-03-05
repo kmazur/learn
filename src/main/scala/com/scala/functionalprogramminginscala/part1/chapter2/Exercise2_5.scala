@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter2
 
 /**
   * Implement the higher-order function that composes two functions.

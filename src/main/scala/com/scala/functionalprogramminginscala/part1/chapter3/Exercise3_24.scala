@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
   * As an example, implement hasSubsequence for checking whether a List contains another List as a subsequence.

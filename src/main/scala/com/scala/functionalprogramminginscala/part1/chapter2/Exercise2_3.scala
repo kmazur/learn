@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter2
 
 /**
   * Let’s look at another example, currying,[9] which converts a function f of two arguments into a function of one argument

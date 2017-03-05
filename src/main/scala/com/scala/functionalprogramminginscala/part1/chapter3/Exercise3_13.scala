@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
   * Can you write foldLeft in terms of foldRight? How about the other way around?

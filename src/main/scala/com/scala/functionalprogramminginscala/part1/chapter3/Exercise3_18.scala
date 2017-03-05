@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
   * Write a function map that generalizes modifying each element in a list while maintaining the structure of the list. Here is its signature:[12]

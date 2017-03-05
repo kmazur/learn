@@ -1,18 +1,17 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
-  * Write a function map, analogous to the method of the same name on List,
-  * that modifies each element in a tree with a given function.
+  * Write a function depth that returns the maximum path length from the root of a tree to any leaf.
   */
-object Exercise3_28 {
+object Exercise3_27 {
 
   sealed trait Tree[+A]
   case class Leaf[A](value: A) extends Tree[A]
   case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 
-  def map[A, B](tree: Tree[A])(f: (A) => B): Tree[B] = tree match {
-    case Leaf(x) => Leaf(f(x))
-    case Branch(l, r) => Branch[B](map(l)(f), map(r)(f))
+  def depth(tree: Tree[Int]): Int = tree match {
+    case Leaf(x) => 1
+    case Branch(l, r) => 1 + depth(l).max(depth(r))
   }
 
   def main(args: Array[String]): Unit = {
@@ -27,7 +26,7 @@ object Exercise3_28 {
         Branch(Leaf(7), Leaf(8))
       )
     )
-    println(map(tree)(_ * 2))
+    println(depth(tree))
   }
 
 }

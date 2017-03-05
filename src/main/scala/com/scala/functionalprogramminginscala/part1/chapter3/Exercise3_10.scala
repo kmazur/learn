@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter3
 
 /**
   * Our implementation of foldRight is not tail-recursive and will result in a StackOverflowError

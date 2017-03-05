@@ -1,4 +1,4 @@
-package com.scala.functionalprogramminginscala
+package com.scala.functionalprogramminginscala.part1.chapter2
 
 /**
   * Implement uncurry, which reverses the transformation of curry.
