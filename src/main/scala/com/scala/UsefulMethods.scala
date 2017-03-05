@@ -1,4 +1,4 @@
-package com.scala.scalafortheimpatient
+package com.scala
 
 import scala.util.Try
 
@@ -47,6 +47,25 @@ object UsefulMethods {
     println(s"$elem, $x")
     val Array(h, i, rest @ _*) = Array(1, 2, 3, 4, 5)
 
+
+
+
+    // Long stream
+    def stream(i: Long = 1L, step: Long = 1L): Stream[Long] = i #:: stream(i + 1L)
+
+
+
+    try {
+      // assigning exception to value
+      val x: Int = throw new RuntimeException("failed")
+    } catch {
+      case _ => println("Caught exception")
+    }
+
+
+
+    val some = Some(1)
+    val one = some.filter(_ == 1).getOrElse(throw new RuntimeException())
   }
 
 }
