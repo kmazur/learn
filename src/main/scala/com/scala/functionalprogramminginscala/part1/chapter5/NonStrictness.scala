@@ -72,6 +72,34 @@ object NonStrictness {
       case Cons(h, t) if p(h()) => Stream.cons(h(), t().takeWhile(p))
       case _ => Empty
     }
+
+    def foldRight[B](init: => B)(f: (A, => B) => B): B = this match {
+      case Cons(h, t) => f(h(), t().foldRight(init)(f))
+      case _ => init
+    }
+
+    /**
+      * Exercise 5.4
+      * Implement forAll, which checks that all elements in the Stream match a given predicate.
+      * Your implementation should terminate the traversal as soon as it encounters a nonmatching value.
+      */
+    def forAll(p: A => Boolean): Boolean = {
+      this match {
+        case Cons(h, t) if p(h()) => t().forAll(p)
+        case Empty => true
+        case _ => false
+      }
+    }
+
+    /**
+      * Exercise 5.5
+      * Use foldRight to implement takeWhile.
+      */
+    def takeWhileWithFold(p: A => Boolean): Stream[A] = {
+      foldRight(Stream.empty[A])((a, b) => if (p(a)) Stream.cons(a, b) else Stream.empty)
+    }
+
+
   }
 
   case object Empty extends Stream[Nothing]
@@ -90,6 +118,44 @@ object NonStrictness {
     def apply[A](as: A*): Stream[A] = {
       if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
     }
+
+    /**
+      * Exercise 5.8
+      * Generalize ones slightly to the function constant, which returns an infinite Stream of a given value.
+      */
+    def constant[A](a: A): Stream[A] = Stream.cons[A](a, constant(a))
+
+    /**
+      * Exercise 5.9
+      * Write a function that generates an infinite stream of integers, starting from n, then n + 1, n + 2, and so on.[7]
+      */
+    def from(n: Int): Stream[Int] = Stream.cons(n, from(n + 1))
+
+    /**
+      * Exercise 5.10
+      * Write a function fibs that generates the infinite stream of Fibonacci numbers: 0, 1, 1, 2, 3, 5, 8, and so on.
+      */
+    def fibs(): Stream[Int] = {
+      def fibs(n1: Int, n2: Int): Stream[Int] = Stream.cons(n1 + n2, fibs(n2, n1 + n2))
+
+      Stream.cons(0, Stream.cons(1, fibs(0, 1)))
+    }
+
+
+    /**
+      * Exercise 5.11
+      * Write a more general stream-building function called unfold.
+      * It takes an initial state, and a function for producing both the next state and the next value in the generated stream.
+      */
+    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+      f(z).map(e =>
+        Stream.cons(e._1, unfold(e._2)(f))
+      ).getOrElse(Empty)
+    }
+
+    // Recursive   -> consumes data
+    // Corecursive -> produces data
+
   }
 
 
@@ -100,6 +166,12 @@ object NonStrictness {
     println(stream.take(2).toList) // List(1, 2)
     println(stream.drop(2).toList) // List(3, 4)
     println(stream.drop(4).toList) // List()
+
+    println(stream.forAll(_ > 0)) // true
+    println(stream.forAll(_ == 0)) // false
+
+    println(Stream.constant(3).take(5).toList.sum) // 15
+    println(Stream.fibs().take(10).toList)
   }
 
 }
