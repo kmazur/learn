@@ -83,54 +83,47 @@ object NonStrictness {
       * Implement forAll, which checks that all elements in the Stream match a given predicate.
       * Your implementation should terminate the traversal as soon as it encounters a nonmatching value.
       */
-    def forAll(p: A => Boolean): Boolean = {
-      this match {
-        case Cons(h, t) if p(h()) => t().forAll(p)
-        case Empty => true
-        case _ => false
-      }
-
-
-      /**
-        * Exercise 5.13
-        * Use unfold to implement map, take, takeWhile, zipWith (as in chapter 3), and zipAll.
-        * The zipAll function should continue the traversal as long as
-        * either stream has more elements—it uses Option to indicate whether each stream has been exhausted.
-        */
-      def unfoldMap[B](f: A => B): Stream[B] = Stream.unfold(this)({
-        case Cons(h, t) => Some((f(h()), t()))
-        case _ => None
-      })
-
-      def unfoldTake(n: Int): Stream[A] = Stream.unfold((this, n))({
-        case (Cons(h, t), n) if n > 1  => Some((h(), (t(), n-1)))
-        case (Cons(h, t), n) if n == 1 => Some((h(), (Empty, 0)))
-        case _ => None
-      })
-
-      def unfoldTakeWhile(p: A => Boolean): Stream[A] = Stream.unfold(this)({
-        case Cons(h, t) if p(h()) => Some(h(), t())
-        case _ => None
-      })
-
-      def zipAll[B](other: Stream[B]): Stream[(A, B)] = Stream.unfold((this, other))({
-        case (Cons(h1, t1), Cons(h2, t2)) => Some((h1(), h2()), (t1(), t2()))
-        case _ => None
-      })
-
-      def zipAll2[B](other: Stream[B]): Stream[(Option[A],Option[B])] = Stream.unfold((this, other))({
-        case (Cons(h1, t1), Cons(h2, t2)) => Some((Some(h1()), Some(h2())), (t1(), t2()))
-        case (Cons(h1, t1), Empty) => Some((Some(h1()), None), (t1(), Empty))
-        case (Empty, Cons(h2, t2)) => Some((None, Some(h2())), (Empty, t2()))
-        case _ => None
-      })
-
-
-      def zipAll[B](s2: Stream[B]): Stream[(Option[A],Option[B])] = {
-
-        null
-      }
+    def forAll(p: A => Boolean): Boolean = this match {
+      case Cons(h, t) if p(h()) => t().forAll(p)
+      case Empty => true
+      case _ => false
     }
+
+
+    /**
+      * Exercise 5.13
+      * Use unfold to implement map, take, takeWhile, zipWith (as in chapter 3), and zipAll.
+      * The zipAll function should continue the traversal as long as
+      * either stream has more elements—it uses Option to indicate whether each stream has been exhausted.
+      */
+    def unfoldMap[B](f: A => B): Stream[B] = Stream.unfold(this)({
+      case Cons(h, t) => Some((f(h()), t()))
+      case _ => None
+    })
+
+    def unfoldTake(n: Int): Stream[A] = Stream.unfold((this, n))({
+      case (Cons(h, t), n) if n > 1 => Some((h(), (t(), n - 1)))
+      case (Cons(h, t), n) if n == 1 => Some((h(), (Empty, 0)))
+      case _ => None
+    })
+
+    def unfoldTakeWhile(p: A => Boolean): Stream[A] = Stream.unfold(this)({
+      case Cons(h, t) if p(h()) => Some(h(), t())
+      case _ => None
+    })
+
+    def zipAll[B](other: Stream[B]): Stream[(A, B)] = Stream.unfold((this, other))({
+      case (Cons(h1, t1), Cons(h2, t2)) => Some((h1(), h2()), (t1(), t2()))
+      case _ => None
+    })
+
+    def zipAll2[B](other: Stream[B]): Stream[(Option[A], Option[B])] = Stream.unfold((this, other))({
+      case (Cons(h1, t1), Cons(h2, t2)) => Some((Some(h1()), Some(h2())), (t1(), t2()))
+      case (Cons(h1, t1), Empty) => Some((Some(h1()), None), (t1(), Empty))
+      case (Empty, Cons(h2, t2)) => Some((None, Some(h2())), (Empty, t2()))
+      case _ => None
+    })
+
 
     /**
       * Exercise 5.5
