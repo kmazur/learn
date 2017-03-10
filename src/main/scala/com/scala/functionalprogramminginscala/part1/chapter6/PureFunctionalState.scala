@@ -129,6 +129,32 @@ object PureFunctionalState {
         map2(elem, acc)((a: A, list: List[A]) => a :: list)
       })
     }
+
+
+    /**
+      * Exercise 6.8
+      * Implement flatMap, and then use it to implement nonNegativeLessThan.
+      */
+    def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = {
+      rng => {
+        val (a, r1) = f(rng)
+        val (b, r2) = g(a)(r1)
+        (b, r2)
+      }
+    }
+
+    def nonNegativeLessThan(n: Int): Rand[Int] = {
+      flatMap(nonNegativeInt)(elem => {
+        val mod = elem % n
+        if (elem + (n - 1) - mod >= 0) {
+          unit(mod)
+        } else {
+          nonNegativeLessThan(n)
+        }
+      })
+    }
+
+
   }
 
   def main(args: Array[String]): Unit = {
@@ -138,6 +164,7 @@ object PureFunctionalState {
 
     val doubles: (Double, RNG) = RNG.double2(rng)
     println(doubles._1)
+
   }
 
 }
