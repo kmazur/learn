@@ -1,21 +1,93 @@
 package com.scala.functionalprogramminginscala.part1.chapter8
 
 
+import com.scala.functionalprogramminginscala.part1.chapter5.NonStrictness.Stream
 import com.scala.functionalprogramminginscala.part1.chapter6.PureFunctionalState.RNG
+import com.scala.functionalprogramminginscala.part1.chapter6.PureFunctionalState.RNG.Rand
 import com.scala.functionalprogramminginscala.part1.chapter6.PureFunctionalState.State.State
-import com.scala.functionalprogramminginscala.part1.chapter8.PropertyTesting.Prop.{FailedCase, SuccessCount}
+import com.scala.functionalprogramminginscala.part1.chapter8.PropertyTesting.Prop.{Falsified, Passed, Result}
 
-import scala.util.Random
 
 object PropertyTesting {
 
-  trait Prop {
-    def check: Either[(FailedCase, SuccessCount), SuccessCount]
+  type TestCases = Int
+
+  case class Prop(run: (TestCases, RNG) => Result) {
+    /**
+      * Exercise 8.9
+      * Now that we have a representation of Prop, implement && and || for composing Prop values.
+      * Notice that in the case of failure we don’t know which property was responsible, the left or the right.
+      * Can you devise a way of handling this, perhaps by allowing Prop values to be assigned a tag or label
+      * which gets displayed in the event of a failure?
+      */
+    def &&(p: Prop): Prop = {
+      Prop((tc, rng) => {
+        val run1 = run(tc, rng)
+        val run2 = p.run(tc, rng)
+        (run1, run2) match {
+          case (Falsified(x, y), Passed) => Falsified(x, y)
+          case (Passed, Falsified(x, y)) => Falsified(x, y)
+          case (Falsified(a, b), Falsified(x, y)) => Falsified(a, b + y)
+          case _ => Passed
+        }
+      })
+    }
+
+    def ||(p: Prop): Prop = {
+      Prop((tc, rng) => {
+        val run1 = run(tc, rng)
+        val run2 = p.run(tc, rng)
+        (run1, run2) match {
+          case (Falsified(x, y), Passed) => Passed
+          case (Passed, Falsified(x, y)) => Passed
+          case (Falsified(a, b), Falsified(x, y)) => Falsified(a, b + y)
+          case _ => Passed
+        }
+      })
+    }
   }
 
   object Prop {
+
+    sealed trait Result {
+      def isFalsified: Boolean
+    }
+
+    case object Passed extends Result {
+      def isFalsified = false
+    }
+
+    case class Falsified(failure: FailedCase,
+                         successes: SuccessCount) extends Result {
+      def isFalsified = true
+    }
+
+    case object Proved extends Result {
+      def isFalsified = false
+    }
+
     type SuccessCount = Int
     type FailedCase = String
+
+
+    def randomStream[A](g: Gen[A])(rng: RNG): Stream[A] =
+      Stream.unfold(rng)(rng => Some(g.sample.run(rng)))
+
+    def forAll[A](as: Gen[A])(f: A => Boolean): Prop = Prop {
+      (n, rng) =>
+        randomStream(as)(rng).zip(Stream.from(0)).take(n).map {
+          case (a, i) => try {
+            if (f(a)) Passed else Falsified(a.toString, i)
+          } catch {
+            case e: Exception => Falsified(buildMsg(a, e), i)
+          }
+        }.find(_.isFalsified).getOrElse(Passed)
+    }
+
+    def buildMsg[A](s: A, e: Exception): String =
+      s"test case: $s\n" +
+        s"generated an exception: ${e.getMessage}\n" +
+        s"stack trace:\n ${e.getStackTrace.mkString("\n")}"
   }
 
   case class Gen[A](sample: State[RNG, A]) {
@@ -70,7 +142,19 @@ object PropertyTesting {
       * Exercise 8.8
       * Implement weighted, a version of union that accepts a weight for each Gen and generates values from each Gen with probability proportional to its weight.
       */
-    def weighted[A](g1: (Gen[A],Double), g2: (Gen[A],Double)): Gen[A] = ???
+    def weighted[A](g1: (Gen[A], Double), g2: (Gen[A], Double)): Gen[A] = {
+      val prob = g1._2 / (g1._2 + g2._2)
+
+      val double: Rand[Double] = RNG.double
+      Gen(RNG.flatMap(double)((randValue) => {
+        val generator: Gen[A] = if (randValue < prob) {
+          g1._1
+        } else {
+          g2._1
+        }
+        generator.sample
+      }))
+    }
 
   }
 

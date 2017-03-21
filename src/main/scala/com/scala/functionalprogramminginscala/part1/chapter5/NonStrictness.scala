@@ -64,6 +64,15 @@ object NonStrictness {
     }
 
 
+    def map[B](f: A => B): Stream[B] =
+      foldRight(Stream.empty[B])((h,t) => Stream.cons(f(h), t))
+
+    @annotation.tailrec
+    final def find(f: A => Boolean): Option[A] = this match {
+      case Empty => None
+      case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
+    }
+
     /**
       * Exercise 5.3
       * Write the function takeWhile for returning all starting elements of a Stream that match the given predicate.
@@ -123,6 +132,23 @@ object NonStrictness {
       case (Empty, Cons(h2, t2)) => Some((None, Some(h2())), (Empty, t2()))
       case _ => None
     })
+
+    def zipWith[B,C](s2: Stream[B])(f: (A,B) => C): Stream[C] =
+      unfold((this, s2)) {
+        case (Cons(h1,t1), Cons(h2,t2)) =>
+          Some((f(h1(), h2()), (t1(), t2())))
+        case _ => None
+      }
+
+    def zip[B](s2: Stream[B]): Stream[(A,B)] =
+      zipWith(s2)((_,_))
+
+    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] =
+      f(z) match {
+        case Some((h,s)) => Stream.cons(h, unfold(s)(f))
+        case None => Stream.empty
+      }
+
 
 
     /**
